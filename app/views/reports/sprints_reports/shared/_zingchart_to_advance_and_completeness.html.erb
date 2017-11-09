@@ -1,0 +1,50 @@
+<script>
+  window.onload = function() {
+
+    <% hr_users = [] %>
+    <% sprint = Sprint.find(params[:sprint]) if params[:sprint].present? %>
+
+    <% if sprint.present? %>
+
+      <% ProjectSprint.where(sprint_id: sprint.id).each do |project_sprint| %>
+
+        zingchart.render({
+          id: "chart_<%= project_sprint.project_id %>",
+          data: {
+            "type": "line",
+            "title": {
+              "text": "Avanço e Completude"
+            },
+            "legend": {
+              "layout":"1x", //row x column
+              "position": "50% 10%",
+              "padding": "10%",
+              "adjust-layout": "true"
+            },
+            "plotarea": {
+              "margin-top": "10%",
+              "margin-bottom": "25%"
+            },
+            "plot": {
+              "value-box": {
+                "text": "%node-value%"
+              }
+            },
+            "series": [
+              <% progresses = project_sprint.project.progresses.where('sprint_id <= ?', sprint.id) %>
+              {
+                "values": <%= raw progresses.joins(:sprint).order('sprints.inicio').map { |p| ["#{p.sprint.description} (#{p.sprint.semester})", p.completeness.to_f] } %>,
+                "text": "Completude"
+              },
+              {
+                "values": <%= raw progresses.joins(:sprint).order('sprints.inicio').map { |p| ["#{p.sprint.description} (#{p.sprint.semester})", p.advance.to_f] } %>,
+                "text": "Avanço"
+              }
+            ]
+          }
+        });
+      <% end %>
+
+    <% end %>
+  };
+</script>

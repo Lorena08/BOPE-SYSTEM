@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>BOPE SYSTEM</title>
+  <%= stylesheet_link_tag 'application' %>
+  <%= stylesheet_link_tag 'bootstrap' %>
+  <%= stylesheet_link_tag 'usebootstrap' %>
+
+  <%= javascript_include_tag 'application' %>
+  <%= javascript_include_tag 'usebootstrap' %>
+  <!-- <link rel="shortcut icon" href="<% image_path('favicon.png') %>"> -->
+
+  <%= csrf_meta_tags %>
+
+</head>
+<body>
+
+  <div class="container">
+
+    <%= render partial: 'layouts/shared_application/header' %>
+
+    <br/>
+    <div class="col-lg-12">
+
+      <%= render partial: 'layouts/shared_application/aside_bar' %>
+
+      <%= yield %>
+
+    </div>
+
+  </div>
+
+  <script>
+      $.notify("<%= notice %>", "success");
+  </script>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/Readmore.js/2.2.0/readmore.js"></script>
+
+  <% if params[:controller].include?("/") %>
+    <% if params[:controller].split("/").first.include?("reports") %>
+      <script src="https://cdn.zingchart.com/zingchart.min.js"></script>
+    <% end %>
+  <% elsif params[:controller].include?("reports") %>
+    <script src="https://cdn.zingchart.com/zingchart.min.js"></script>
+  <% end %>
+
+</body>
+</html>
