@@ -78,8 +78,12 @@
 
                 <% values << ((hours_performed * 100) /
                               ((w.expected_hours.to_f * 3600) *
-                                Project.joins(team:[:users]).where('users.id = ?', u.id).count)
-                             ).round(1) %>
+                              Project.joins(:project_sprints, team:[:users])
+                              .where('users.id = ?', u.id)
+                              .where('project_sprints.sprint_id = ?', sprint.id)
+                              .count
+                            )
+                           ).round(1) %>
 
               <% end %>
 
